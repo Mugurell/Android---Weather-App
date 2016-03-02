@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:title="@string/app_name"
+    app:subtitle="Simply enter a city to get current weather"
+    app:titleTextColor="@color/toolbarTextColor"
+    app:subtitleTextColor="@color/toolbarTextColor"
+    android:minHeight="?attr/actionBarSize"
+    android:background="#df64b5f6">
+
+</android.support.v7.widget.Toolbar>
