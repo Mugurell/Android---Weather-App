@@ -16,77 +16,56 @@ Nothing too complicated but I'm really proud of a method I've built which allows
 ```java
 /**
  * Cool method which allows to query a JSONObject based on various fields - basically any
-      * name-value pair that is contained in the result from
-      * {@code http://api.openweathermap.org/data/2.5 ...}.
-      *
-      * @param forecast JSONObject representing the response get from interrogating
-      *                                  {@code http://api.openweathermap.org/data/2.5...}
-      *                                  for the weather in a specific city.<br><br>
-      * @param forecastQueriedProperties varying number of Strings representing name-value pairs
-      *                                  for which to query the {@code forecast} JSONObject
-      * @return The values for the queried fields, in the query order.
-      */
-     private ArrayList<String> getWeatherInfo(JSONObject forecast, String[]...
-             forecastQueriedProperties) {
+ * name-value pair that is contained in the result from
+ * {@code http://api.openweathermap.org/data/2.5 ...}.
+ *
+ * @param forecast JSONObject representing the response get from interrogating
+ *                                  {@code http://api.openweathermap.org/data/2.5...}
+ *                                  for the weather in a specific city.<br><br>
+ * @param forecastQueriedProperties varying number of Strings representing name-value pairs
+ *                                  for which to query the {@code forecast} JSONObject
+ * @return The values for the queried fields, in the query order.
+ */
+private ArrayList<String> getWeatherInfo(JSONObject forecast, String[]...
+        forecastQueriedProperties) {
 
-         /** This will store the forecast to be returned */
-         ArrayList<String> weather = new ArrayList<>(forecastQueriedProperties.length);
- //        Log.e("Forecast:", forecast.toString());
+    /** This will store the forecast to be returned */
+    ArrayList<String> weather = new ArrayList<>(forecastQueriedProperties.length);
+//        Log.e("Forecast:", forecast.toString());
 
-         try {
-             for (String[] properties : forecastQueriedProperties) {
-                 JSONObject tempJSON = forecast;
-                 String queriedProperty = "";
-                 for (int i = 0; i < properties.length; i++) {
- //                    Log.e("Querying JSON for ", properties[i]);
-                     if (i + 1 < properties.length) {
- //                        Log.e("Current JSON", tempJSON.getString(properties[i]));
-                         // weather is a JSONArray with just one element
-                         if (properties[i].equals("weather")) {
-                             String wS = tempJSON.getString(properties[i]);
-                             tempJSON = new JSONArray(wS).getJSONObject(0);
-                         }
-                         else {
-                             tempJSON = new JSONObject(tempJSON.getString(properties[i]));
-                         }
-                     }
-                     else {  // we have the queried forecast property
-                         queriedProperty = tempJSON.getString(properties[i]);
-                     }
+    try {
+        for (String[] properties : forecastQueriedProperties) {
+            JSONObject tempJSON = forecast;
+            String queriedProperty = "";
+            for (int i = 0; i < properties.length; i++) {
+//                    Log.e("Querying JSON for ", properties[i]);
+                if (i + 1 < properties.length) {
+//                        Log.e("Current JSON", tempJSON.getString(properties[i]));
+                    // weather is a JSONArray with just one element
+                    if (properties[i].equals("weather")) {
+                        String wS = tempJSON.getString(properties[i]);
+                        tempJSON = new JSONArray(wS).getJSONObject(0);
+                    }
+                    else {
+                        tempJSON = new JSONObject(tempJSON.getString(properties[i]));
+                    }
+                }
+                else {  // we have the queried forecast property
+                    queriedProperty = tempJSON.getString(properties[i]);
+                }
 
-                     if (properties[i].equals("temp")) {
-                         queriedProperty = getCelsiusFromKelvin(queriedProperty);
-                     }
-                 }
-                 weather.add(queriedProperty);
- //                Log.d("Current weather is ", weather.toString());
-             }
-         } catch (JSONException e) {
-             e.printStackTrace();
-         }
+                if (properties[i].equals("temp")) {
+                    queriedProperty = getCelsiusFromKelvin(queriedProperty);
+                }
+            }
+            weather.add(queriedProperty);
+//                Log.d("Current weather is ", weather.toString());
+        }
+    } catch (JSONException e) {
+        e.printStackTrace();
+    }
 
-         return weather;
-     }
-
-     private String getCelsiusFromKelvin(String kelvinTemp) {
-         double kelvins = Double.parseDouble(kelvinTemp.toString());
-         double celsius = kelvins - 273.15;
-
-         return (Double.toString(celsius));
-     }
-
-     /**
-      * Simple check to mitigate invalid queries for invalid cities. Can be made more complex later.
-      * @param city name of the city to get the weather for, as entered by the user.
-      * @return
-      */
-     private boolean isValidCity(String city) {
-         if (city.length() <= 2) {
-             Snackbar.make(findViewById(android.R.id.content),
-                           "Too few characters for the city name", Snackbar.LENGTH_LONG).show();
-             return false;
-         }
-         return true;
+    return weather;
 }
 ```
 
